@@ -12,11 +12,12 @@
 
 extern const uint8_t font8x8[][8];
 
-extern const uint8_t emoji_excellent[8];    /* DOSKONAŁA - wielki uśmiech :D */
-extern const uint8_t emoji_good[8];         /* UMIARKOWANA - uśmiech :) */
-extern const uint8_t emoji_moderate[8];     /* LEKKIE ZANIECZYSZ - neutralna :| */
-extern const uint8_t emoji_poor[8];         /* ŚREDNIE - lekko smutna :( */
-extern const uint8_t emoji_bad[8];          /* CIĘŻKIE - smutna :C */
-extern const uint8_t emoji_hazardous[8];    /* POWAŻNE - z maską */
+/* Emotikony 16x16 (2x2 znaki) - jakość powietrza */
+extern const uint8_t emoji16_excellent[32];   /* :D DOSKONAŁA */
+extern const uint8_t emoji16_good[32];        /* :) UMIARKOWANA */
+extern const uint8_t emoji16_moderate[32];    /* :| NEUTRALNA */
+extern const uint8_t emoji16_poor[32];        /* :( LEKKO SMUTNA */
+extern const uint8_t emoji16_bad[32];         /* :C SMUTNA */
+extern const uint8_t emoji16_hazardous[32];   /* 😷 Z MASKĄ */
 
 #endif /* INC_FONT_H_ */

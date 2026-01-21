@@ -18,5 +18,7 @@ void OLED_DrawCol(uint8_t page, uint8_t startColumn, uint8_t letter);
 void OLED_temp(void);
 void OLED_pressure_Pa(float pressure, int x);
 void OLED_dust(void);
+static const uint8_t* GetAirQualityEmoji16(float pm25);
+void OLED_DrawAirQualityEmoji16(void);
 
 #endif /* INC_OLED_H_ */

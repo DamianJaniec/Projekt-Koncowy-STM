@@ -14,5 +14,5 @@
 ../Core/Src/oled.c:189:6:OLED_temp	1
 ../Core/Src/oled.c:243:6:OLED_pressure_Pa	5
 ../Core/Src/oled.c:287:6:OLED_dust	1
-../Core/Src/oled.c:318:23:GetAirQualityEmoji	6
-../Core/Src/oled.c:334:6:OLED_DrawAirQualityEmoji	1
+../Core/Src/oled.c:318:23:GetAirQualityEmoji16	6
+../Core/Src/oled.c:334:6:OLED_DrawAirQualityEmoji16	2

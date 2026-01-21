@@ -293,7 +293,7 @@ void OLED_dust(void)
     const char* qualityText;
 
 
-    OLED_DrawAirQualityEmoji();
+    OLED_DrawAirQualityEmoji16();
     /* === PM2.5 VALUE (Page 6) === */
     /* Label "PM:" */
     OLED_DrawLetter(6, 0, font8x8[40]);   /* P */
@@ -315,26 +315,45 @@ void OLED_dust(void)
     OLED_DrawString(7, 0, qualityText);
 }
 
-static const uint8_t* GetAirQualityEmoji(float pm25)
+static const uint8_t* GetAirQualityEmoji16(float pm25)
 {
     if (pm25 <= 35.0f)
-        return emoji_excellent;     /* :D */
+        return emoji16_excellent;   /* :D */
     else if (pm25 <= 75.0f)
-        return emoji_good;          /* :) */
+        return emoji16_good;        /* :) */
     else if (pm25 <= 115.0f)
-        return emoji_moderate;      /* :| */
+        return emoji16_moderate;    /* :| */
     else if (pm25 <= 150.0f)
-        return emoji_poor;          /* :( */
+        return emoji16_poor;        /* :( */
     else if (pm25 <= 250.0f)
-        return emoji_bad;           /* :C */
+        return emoji16_bad;         /* :C */
     else
-        return emoji_hazardous;     /* maska */
+        return emoji16_hazardous;   /* maska */
 }
 
-void OLED_DrawAirQualityEmoji(void)
+void OLED_DrawAirQualityEmoji16(void)
 {
-    const uint8_t* emoji = GetAirQualityEmoji(dustDensity);
+    const uint8_t* emoji = GetAirQualityEmoji16(dustDensity);
+    uint8_t topPart[16];
+    uint8_t bottomPart[16];
+    int i;
 
-    /* Page 0, Column 120 = prawy górny róg (128-8=120) */
-    OLED_DrawLetter(0, 120, emoji);
+    /* Kopiuj dane do buforów */
+    for (i = 0; i < 16; i++)
+    {
+        topPart[i] = emoji[i];
+        bottomPart[i] = emoji[16 + i];
+    }
+
+    /* Górna połowa - Page 0, kolumny 112-127 */
+    OLED_WriteCommand(0xB0 + 0);           /* Page 0 */
+    OLED_WriteCommand(0x02 + (112 & 0x0F)); /* Column 112 low nibble */
+    OLED_WriteCommand(0x10 + (112 >> 4));   /* Column 112 high nibble */
+    OLED_WriteData(topPart, 16);
+
+    /* Dolna połowa - Page 1, kolumny 112-127 */
+    OLED_WriteCommand(0xB0 + 1);           /* Page 1 */
+    OLED_WriteCommand(0x02 + (112 & 0x0F));
+    OLED_WriteCommand(0x10 + (112 >> 4));
+    OLED_WriteData(bottomPart, 16);
 }

@@ -2444,12 +2444,12 @@ int main(void)
  8001708:	b2db      	uxtb	r3, r3
  800170a:	2b00      	cmp	r3, #0
  800170c:	d0fa      	beq.n	8001704 <main+0x38>
-	      {
-	          update_flag = 0;
+	  {
+	  	update_flag = 0;
  800170e:	4b05      	ldr	r3, [pc, #20]	@ (8001724 <main+0x58>)
  8001710:	2200      	movs	r2, #0
  8001712:	701a      	strb	r2, [r3, #0]
-	          updateData();
+	    updateData();
  8001714:	f7ff ff1c 	bl	8001550 <updateData>
 	  if (update_flag)
  8001718:	e7f4      	b.n	8001704 <main+0x38>

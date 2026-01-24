@@ -67,11 +67,10 @@ void BMP_Init(void)
 
     BMP_ReadCalibration();
 
-    /* Oversampling x1, normal mode */
-    BMP_Write8(0xF4, 0b00100111);
-
-    /* Filter, 0.5ms standby */
-    BMP_Write8(0xF5, 0b00000000);
+    BMP_Write8(0xF5, 0b00001000);  /* Filter x4, standby 0.5ms */
+    BMP_Write8(0xF4, 0b01010111);  /* Oversampling x1, normal mode */
+    /* Wait for first measurement to complete with x16 oversampling (~25ms) */
+    HAL_Delay(50);
 }
 
 float BMP_ReadTemperature(void)
@@ -121,6 +120,7 @@ float BMP_ReadPressure(void)
 
 float pressure_to_sealevel_temp(float pressure_hPa, float altitude_m, float temperature_C)
 {
-    return pressure_hPa * powf(1.0f - (altitude_m / (44330.0f + 0.0065f * temperature_C)), -5.255f);
+    return pressure_hPa * powf(1.0f -
+    		(altitude_m / (44330.0f + 0.0065f * temperature_C)), -5.255f);
 }
 

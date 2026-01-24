@@ -10,9 +10,10 @@
 
 #include "main.h"
 
-/* Exported functions */
+
 float ReadDustSensor(void);
 float VoltageToDustDensity(float voltage);
-float ReadDustSensor_Avg(int samples);
+
+int Filter(int m);
 
 #endif /* INC_DUST_SENSOR_H_ */

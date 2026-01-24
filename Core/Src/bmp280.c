@@ -7,36 +7,30 @@
 #include "bmp280.h"
 #include <math.h>
 
-/* External handles */
+
 extern I2C_HandleTypeDef hi2c1;
 
-/* Private variables - calibration data */
-static uint16_t dig_T1;
-static int16_t dig_T2, dig_T3;
-static uint16_t dig_P1;
-static int16_t dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
-static int32_t t_fine;
 
-/* Private function prototypes */
-static uint8_t BMP_Read8(uint8_t reg);
-static void BMP_Write8(uint8_t reg, uint8_t value);
-static void BMP_ReadCalibration(void);
+uint16_t dig_T1;
+int16_t dig_T2, dig_T3;
+uint16_t dig_P1;
+int16_t dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
+int32_t t_fine;
 
-/* Private functions */
 
-static uint8_t BMP_Read8(uint8_t reg)
+uint8_t BMP_Read8(uint8_t reg)
 {
     uint8_t value = 0;
     HAL_I2C_Mem_Read(&hi2c1, BMP280_ADDR, reg, 1, &value, 1, HAL_MAX_DELAY);
     return value;
 }
 
-static void BMP_Write8(uint8_t reg, uint8_t value)
+void BMP_Write8(uint8_t reg, uint8_t value)
 {
     HAL_I2C_Mem_Write(&hi2c1, BMP280_ADDR, reg, 1, &value, 1, HAL_MAX_DELAY);
 }
 
-static void BMP_ReadCalibration(void)
+void BMP_ReadCalibration(void)
 {
     dig_T1 = (uint16_t)(BMP_Read8(0x88) | (BMP_Read8(0x89) << 8));
     dig_T2 = (int16_t)(BMP_Read8(0x8A) | (BMP_Read8(0x8B) << 8));
@@ -68,11 +62,18 @@ void BMP_Init(void)
     BMP_ReadCalibration();
 
     BMP_Write8(0xF5, 0b00001000);  /* Filter x4, standby 0.5ms */
-    BMP_Write8(0xF4, 0b01010111);  /* Oversampling x1, normal mode */
-    /* Wait for first measurement to complete with x16 oversampling (~25ms) */
-    HAL_Delay(50);
+    BMP_Write8(0xF4, 0b01010000);
+    /* Oversampling x16 pressure, x2 temperature, SLEEP MODE */
+    /* Mode bits [1:0] = 00 (sleep) - czujnik nie mierzy automatycznie */
+    HAL_Delay(10);
 }
+void BMP_StartMeasurement(void)
+{
 
+    BMP_Write8(0xF4, 0b01010001);  /* x16 pressure, x2 temp, FORCED */
+    /* Poczekaj aż zakończy pomiar (~25ms dla x16 oversampling) */
+    HAL_Delay(30);
+}
 float BMP_ReadTemperature(void)
 {
     int32_t adc_T;
@@ -118,9 +119,21 @@ float BMP_ReadPressure(void)
     return (float)p / 256.0f;
 }
 
-float pressure_to_sealevel_temp(float pressure_hPa, float altitude_m, float temperature_C)
+float pressure_to_sealevel(float pressure_hPa, float altitude_m, float temperature_C)
 {
-    return pressure_hPa * powf(1.0f -
-    		(altitude_m / (44330.0f + 0.0065f * temperature_C)), -5.255f);
+    const float LAPSE_RATE = 0.0065f;      /* K/m lapse rate */
+    const float KELVIN_OFFSET = 273.15f;   /* Celsiusz na Kelvin */
+    const float EXPONENT = -5.257f;        /* eksponenta g*M/(R*L) */
+
+    /* obliczanie temp*/
+    float temp_kelvin = temperature_C + KELVIN_OFFSET;
+    float denominator = temp_kelvin + LAPSE_RATE * altitude_m;
+    float numerator = LAPSE_RATE * altitude_m;
+
+    /* P_SL = P × (1 - (0.0065 × h) / (T + 273.15 + 0.0065 × h))^(-5.257) */
+    float base = 1.0f - (numerator / denominator);
+    float result = pressure_hPa * powf(base, EXPONENT);
+
+    return result;
 }
 

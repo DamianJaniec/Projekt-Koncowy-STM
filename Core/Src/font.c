@@ -17,7 +17,7 @@ const uint8_t font8x8[][8] = {
         0b01111100,
         0b00000000
     },
-    { // 1 - POPRAWIONE (wycentrowane)
+    { // 1
         0b00000000,
         0b00000000,
         0b10000100,

@@ -6,17 +6,9 @@
  */
 #include "dht11.h"
 
-/* External handles */
 extern TIM_HandleTypeDef htim1;
 
-/* Private variables */
 uint8_t DHT11_Data[5];
-
-/* Private function prototypes */
-static void DHT11_Pin_Output(void);
-static void DHT11_Pin_Input(void);
-
-/* Function definitions */
 
 void delay_us(uint16_t us)
 {
@@ -24,7 +16,7 @@ void delay_us(uint16_t us)
     while ((__HAL_TIM_GET_COUNTER(&htim1) - start) < us);
 }
 
-static void DHT11_Pin_Output(void)
+void DHT11_Pin_Output(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     GPIO_InitStruct.Pin = DHT11_Pin;
@@ -34,7 +26,7 @@ static void DHT11_Pin_Output(void)
     HAL_GPIO_Init(DHT11_GPIO_Port, &GPIO_InitStruct);
 }
 
-static void DHT11_Pin_Input(void)
+void DHT11_Pin_Input(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     GPIO_InitStruct.Pin = DHT11_Pin;

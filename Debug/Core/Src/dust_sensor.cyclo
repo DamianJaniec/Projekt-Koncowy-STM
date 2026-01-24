@@ -1,4 +1,3 @@
-../Core/Src/dust_sensor.c:16:12:Filter	4
-../Core/Src/dust_sensor.c:52:7:ReadDustSensor	1
-../Core/Src/dust_sensor.c:84:7:VoltageToDustDensity	2
-../Core/Src/dust_sensor.c:102:7:ReadDustSensor_Avg	2
+../Core/Src/dust_sensor.c:14:5:Filter	4
+../Core/Src/dust_sensor.c:48:7:ReadDustSensor	1
+../Core/Src/dust_sensor.c:70:7:VoltageToDustDensity	2

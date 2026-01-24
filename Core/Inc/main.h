@@ -69,8 +69,6 @@ void Error_Handler(void);
 #define GREEN_LED_GPIO_Port GPIOB
 #define GP_ADC_Pin GPIO_PIN_1
 #define GP_ADC_GPIO_Port GPIOB
-#define Red_LED_Pin GPIO_PIN_14
-#define Red_LED_GPIO_Port GPIOB
 #define OLED_DC_Pin GPIO_PIN_8
 #define OLED_DC_GPIO_Port GPIOA
 #define OLED_RES_Pin GPIO_PIN_9

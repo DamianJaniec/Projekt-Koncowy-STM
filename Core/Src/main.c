@@ -62,6 +62,8 @@ float psi_w = 0;
 float tempBMP = 0;
 float dustVoltage = 0;
 float dustDensity = 0;
+
+#define WYSOKOSC 220
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,12 +82,12 @@ void updateData()
 	DHT11_Read_Data();
 	hum = (float)DHT11_Data[0] + ((float)DHT11_Data[1] / 10.0f);
 	tem = (float)DHT11_Data[2] + ((float)DHT11_Data[3] / 10.0f);
+	void BMP_StartMeasurement(void);
 
-	HAL_GPIO_TogglePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin);
 
 	tempBMP = BMP_ReadTemperature();
 	psi = BMP_ReadPressure();
-	psi_w = pressure_to_sealevel_temp(psi, 240, tem);
+	psi_w = pressure_to_sealevel(psi, WYSOKOSC,tem);
 
 	dustVoltage = ReadDustSensor();
 	dustDensity = VoltageToDustDensity(dustVoltage);
@@ -94,6 +96,8 @@ void updateData()
 	OLED_pressure_Pa(psi_w, 0);
 	OLED_pressure_Pa(psi, 64);
 	OLED_dust();
+
+	HAL_GPIO_TogglePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin);
 }
 void init()
 {
@@ -479,7 +483,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, DHT11_Pin|GP_DIODE_Pin|OLED_DC_Pin|OLED_RES_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GREEN_LED_Pin|Red_LED_Pin|OLED_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GREEN_LED_Pin|OLED_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -494,8 +498,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : GREEN_LED_Pin Red_LED_Pin OLED_CS_Pin */
-  GPIO_InitStruct.Pin = GREEN_LED_Pin|Red_LED_Pin|OLED_CS_Pin;
+  /*Configure GPIO pins : GREEN_LED_Pin OLED_CS_Pin */
+  GPIO_InitStruct.Pin = GREEN_LED_Pin|OLED_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

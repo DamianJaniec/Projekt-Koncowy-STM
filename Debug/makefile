@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := proj3
+BUILD_ARTIFACT_NAME := Stacja-Pogodowa
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-proj3.elf \
+Stacja-Pogodowa.elf \
 
 MAP_FILES += \
-proj3.map \
+Stacja-Pogodowa.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-proj3.list \
+Stacja-Pogodowa.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: proj3.elf secondary-outputs
+main-build: Stacja-Pogodowa.elf secondary-outputs
 
 # Tool invocations
-proj3.elf proj3.map: $(OBJS) $(USER_OBJS) C:\Users\Dejmian\Desktop\stm32\proj3\STM32F767ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "proj3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\Dejmian\Desktop\stm32\proj3\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="proj3.map" -Wl,--gc-sections -static -gdwarf-4 --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Stacja-Pogodowa.elf Stacja-Pogodowa.map: $(OBJS) $(USER_OBJS) C:\Users\Dejmian\Desktop\stm32\Stacja-Pogodowa\STM32F767ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Stacja-Pogodowa.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\Dejmian\Desktop\stm32\Stacja-Pogodowa\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Stacja-Pogodowa.map" -Wl,--gc-sections -static -gdwarf-4 --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-proj3.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "proj3.list"
+Stacja-Pogodowa.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Stacja-Pogodowa.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout proj3.elf proj3.list proj3.map
+	-$(RM) Stacja-Pogodowa.elf Stacja-Pogodowa.list Stacja-Pogodowa.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

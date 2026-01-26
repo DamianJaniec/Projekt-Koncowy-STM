@@ -62,17 +62,21 @@ void BMP_Init(void)
     BMP_ReadCalibration();
 
     BMP_Write8(0xF5, 0b00001000);  /* Filter x4, standby 0.5ms */
-    BMP_Write8(0xF4, 0b01010000);
+    BMP_Write8(0xF4, 0b01010011);
     /* Oversampling x16 pressure, x2 temperature, SLEEP MODE */
     /* Mode bits [1:0] = 00 (sleep) - czujnik nie mierzy automatycznie */
-    HAL_Delay(10);
+    HAL_Delay(50);
+}
+uint8_t BMP_IsMeasuring(void)
+{
+    return (BMP_Read8(0xF3) & 0x08);
 }
 void BMP_StartMeasurement(void)
 {
 
     BMP_Write8(0xF4, 0b01010001);  /* x16 pressure, x2 temp, FORCED */
     /* Poczekaj aż zakończy pomiar (~25ms dla x16 oversampling) */
-    HAL_Delay(30);
+    while (BMP_IsMeasuring());   // czekaj aż skończy
 }
 float BMP_ReadTemperature(void)
 {

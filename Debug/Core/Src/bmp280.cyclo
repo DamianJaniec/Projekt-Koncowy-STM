@@ -2,7 +2,8 @@
 ../Core/Src/bmp280.c:28:6:BMP_Write8	1
 ../Core/Src/bmp280.c:33:6:BMP_ReadCalibration	1
 ../Core/Src/bmp280.c:52:6:BMP_Init	2
-../Core/Src/bmp280.c:70:6:BMP_StartMeasurement	1
-../Core/Src/bmp280.c:77:7:BMP_ReadTemperature	1
-../Core/Src/bmp280.c:94:7:BMP_ReadPressure	2
-../Core/Src/bmp280.c:122:7:pressure_to_sealevel	1
+../Core/Src/bmp280.c:70:9:BMP_IsMeasuring	1
+../Core/Src/bmp280.c:74:6:BMP_StartMeasurement	2
+../Core/Src/bmp280.c:81:7:BMP_ReadTemperature	1
+../Core/Src/bmp280.c:98:7:BMP_ReadPressure	2
+../Core/Src/bmp280.c:126:7:pressure_to_sealevel	1

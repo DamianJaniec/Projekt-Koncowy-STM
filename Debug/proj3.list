@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 0000002e  00000000  00000000  0000905c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   000147ff  00000000  00000000  0000908a  2**0
+ 12 .debug_info   00014815  00000000  00000000  0000908a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00002c1b  00000000  00000000  0001d889  2**0
+ 13 .debug_abbrev 00002c37  00000000  00000000  0001d89f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 000011f8  00000000  00000000  000204a8  2**3
+ 14 .debug_aranges 00001200  00000000  00000000  000204d8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 00001098  00000000  00000000  000216a0  2**3
+ 15 .debug_ranges 000010a0  00000000  00000000  000216d8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00028d7f  00000000  00000000  00022738  2**0
+ 16 .debug_macro  00028d7f  00000000  00000000  00022778  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00016e5b  00000000  00000000  0004b4b7  2**0
+ 17 .debug_line   00016e83  00000000  00000000  0004b4f7  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000fee7a  00000000  00000000  00062312  2**0
+ 18 .debug_str    000fee8a  00000000  00000000  0006237a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  0016118c  2**0
+ 19 .comment      00000043  00000000  00000000  00161204  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00004e44  00000000  00000000  001611d0  2**2
+ 20 .debug_frame  00004e60  00000000  00000000  00161248  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -926,14 +926,14 @@ void BMP_Init(void)
  8000a6a:	2108      	movs	r1, #8
  8000a6c:	20f5      	movs	r0, #245	@ 0xf5
  8000a6e:	f7ff fef5 	bl	800085c <BMP_Write8>
-    BMP_Write8(0xF4, 0b01010000);
- 8000a72:	2150      	movs	r1, #80	@ 0x50
+    BMP_Write8(0xF4, 0b01010011);
+ 8000a72:	2153      	movs	r1, #83	@ 0x53
  8000a74:	20f4      	movs	r0, #244	@ 0xf4
  8000a76:	f7ff fef1 	bl	800085c <BMP_Write8>
     /* Oversampling x16 pressure, x2 temperature, SLEEP MODE */
     /* Mode bits [1:0] = 00 (sleep) - czujnik nie mierzy automatycznie */
-    HAL_Delay(10);
- 8000a7a:	200a      	movs	r0, #10
+    HAL_Delay(50);
+ 8000a7a:	2032      	movs	r0, #50	@ 0x32
  8000a7c:	f001 fffa 	bl	8002a74 <HAL_Delay>
  8000a80:	e000      	b.n	8000a84 <BMP_Init+0x34>
         return;
@@ -947,7 +947,7 @@ void BMP_Init(void)
 08000a8c <BMP_ReadTemperature>:
     BMP_Write8(0xF4, 0b01010001);  /* x16 pressure, x2 temp, FORCED */
     /* Poczekaj aż zakończy pomiar (~25ms dla x16 oversampling) */
-    HAL_Delay(30);
+    while (BMP_IsMeasuring());   // czekaj aż skończy
 }
 float BMP_ReadTemperature(void)
 {
